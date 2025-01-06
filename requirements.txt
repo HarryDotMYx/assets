@@ -1,7 +1,7 @@
-Django==5.0.1
-python-dotenv==1.0.0
-django-cors-headers==4.3.1
-django-crispy-forms==2.1
-crispy-tailwind==0.5.0
-reportlab==4.0.9
-xhtml2pdf==0.2.13
+Django==5.1.4
+python-dotenv==1.0.1
+django-cors-headers==4.6.0
+django-crispy-forms==2.3
+crispy-tailwind==1.0.3
+reportlab==4.2.5
+xhtml2pdf==0.2.16
