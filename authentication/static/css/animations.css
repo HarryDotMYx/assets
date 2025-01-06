@@ -1,0 +1,55 @@
+/* Fade animations */
+.fade-enter {
+    opacity: 0;
+    transform: scale(0.95);
+}
+
+.fade-enter-active {
+    opacity: 1;
+    transform: scale(1);
+    transition: opacity 300ms ease-out, transform 300ms ease-out;
+}
+
+.fade-exit {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.fade-exit-active {
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity 200ms ease-in, transform 200ms ease-in;
+}
+
+/* Hover animations */
+.hover-scale {
+    transition: transform 150ms ease-in-out;
+}
+
+.hover-scale:hover {
+    transform: scale(1.02);
+}
+
+/* Input focus animations */
+.input-focus {
+    transition: all 200ms ease-in-out;
+}
+
+.input-focus:focus {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Icon animations */
+.icon-spin {
+    animation: spin 20s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}

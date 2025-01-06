@@ -1,0 +1,34 @@
+/* Modal backdrop */
+.modal {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease-in-out;
+    backdrop-filter: blur(4px);
+}
+
+.modal[style*="display: flex"] {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Modal content */
+.modal-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    width: 100%;
+    max-width: 24rem;
+    position: relative;
+    opacity: 0;
+    transform: scale(0.95);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+
+.modal[style*="display: flex"] .modal-content {
+    opacity: 1;
+    transform: scale(1);
+}

@@ -1,0 +1,33 @@
+/* Modal backdrop */
+.modal-backdrop {
+    background-color: rgba(0, 0, 0, 0);
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-backdrop-visible {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Modal content animations */
+.modal-content {
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modal-content-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Close button hover effect */
+.close-btn {
+    transition: transform 0.2s ease;
+}
+
+.close-btn:hover {
+    transform: rotate(90deg);
+}

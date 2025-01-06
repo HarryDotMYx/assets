@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="flex h-screen bg-gray-100">
+    <!-- Sidebar -->
+    {% include 'assets/components/sidebar.html' %}
+
+    <!-- Main Content -->
+    <main class="flex-1 overflow-y-auto">
+        <!-- Top Bar -->
+        <div class="bg-white shadow-sm">
+            <div class="flex items-center justify-between px-8 py-4">
+                <h1 class="text-2xl font-semibold text-gray-800">{{ page_title }}</h1>
+                <div class="flex items-center">
+                    <span class="mr-4 text-gray-600">{{ request.user.email }}</span>
+                    <a href="{% url 'logout' %}" class="text-red-600 hover:text-red-800">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Maintenance List -->
+        <div class="p-8">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <h2 class="text-lg font-semibold text-gray-800">Maintenance Records</h2>
+                    <p class="text-sm text-gray-600">Track asset maintenance history</p>
+                </div>
+                <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    New Maintenance Record
+                </button>
+            </div>
+
+            <div class="bg-white rounded-lg shadow overflow-hidden">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Asset</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cost</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Performed By</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        {% for record in maintenance_records %}
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ record.asset.name }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ record.maintenance_type }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ record.maintenance_date|date:"M d, Y" }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">${{ record.cost }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ record.performed_by }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                <a href="#" class="text-blue-600 hover:text-blue-900 mr-3">Edit</a>
+                                <a href="#" class="text-red-600 hover:text-red-900">Delete</a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                                No maintenance records found
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}

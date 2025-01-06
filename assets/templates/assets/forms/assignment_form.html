@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="flex h-screen bg-gray-100">
+    {% include 'assets/components/sidebar.html' %}
+    
+    <main class="flex-1 overflow-y-auto">
+        <div class="bg-white shadow-sm">
+            <div class="flex items-center justify-between px-8 py-4">
+                <h1 class="text-2xl font-semibold text-gray-800">New Asset Assignment</h1>
+            </div>
+        </div>
+
+        <div class="p-8">
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <div class="mb-6">
+                    <h2 class="text-lg font-semibold text-gray-800">Assignment Details</h2>
+                    <p class="text-sm text-gray-600">Create a new asset assignment</p>
+                </div>
+
+                {% if messages %}
+                <div class="mb-6">
+                    {% for message in messages %}
+                    <div class="p-4 rounded-lg {% if message.tags == 'success' %}bg-green-100 text-green-700{% else %}bg-red-100 text-red-700{% endif %}">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">
+                                Asset <span class="text-red-500">*</span>
+                                <span class="text-xs text-gray-500">(Required)</span>
+                            </label>
+                            {{ form.asset }}
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">
+                                Assigned to <span class="text-red-500">*</span>
+                                <span class="text-xs text-gray-500">(Required)</span>
+                            </label>
+                            {{ form.assigned_to }}
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">
+                                Expected Return Date
+                            </label>
+                            {{ form.expected_return_date }}
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">
+                                Notes
+                            </label>
+                            {{ form.notes }}
+                        </div>
+                    </div>
+
+                    <div class="mt-6">
+                        <button type="submit" class="w-full md:w-auto px-6 py-2 text-white bg-blue-500 hover:bg-blue-600 rounded-lg flex items-center justify-center">
+                            Create Assignment
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}

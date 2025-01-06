@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Asset Management Report</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .header { text-align: center; margin-bottom: 30px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f5f5f5; }
+        .section { margin-bottom: 30px; }
+        h2 { color: #2563eb; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>SEDCO Asset Management Report</h1>
+        <p>Generated on {% now "F j, Y" %}</p>
+    </div>
+
+    <div class="section">
+        <h2>Asset Summary</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Asset Tag</th>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Status</th>
+                    <th>Location</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for asset in assets %}
+                <tr>
+                    <td>{{ asset.asset_tag }}</td>
+                    <td>{{ asset.name }}</td>
+                    <td>{{ asset.category.name }}</td>
+                    <td>{{ asset.status }}</td>
+                    <td>{{ asset.location }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>Current Assignments</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Asset</th>
+                    <th>Assigned To</th>
+                    <th>Date</th>
+                    <th>Return Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for assignment in assignments %}
+                <tr>
+                    <td>{{ assignment.asset.name }}</td>
+                    <td>{{ assignment.assigned_to.email }}</td>
+                    <td>{{ assignment.assigned_date|date:"M d, Y" }}</td>
+                    <td>{{ assignment.return_date|date:"M d, Y"|default:"Not returned" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>Recent Maintenance Records</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Asset</th>
+                    <th>Type</th>
+                    <th>Date</th>
+                    <th>Cost</th>
+                    <th>Performed By</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in maintenance_records %}
+                <tr>
+                    <td>{{ record.asset.name }}</td>
+                    <td>{{ record.maintenance_type }}</td>
+                    <td>{{ record.maintenance_date|date:"M d, Y" }}</td>
+                    <td>${{ record.cost }}</td>
+                    <td>{{ record.performed_by }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

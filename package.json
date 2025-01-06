@@ -1,0 +1,8 @@
+{
+  "name": "asset-management",
+  "private": true,
+  "version": "1.0.0",
+  "dependencies": {
+    "chart.js": "^4.4.1"
+  }
+}
