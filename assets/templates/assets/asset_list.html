@@ -1,30 +1,10 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block extra_head %}
-<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-{% endblock %}
-
 {% block content %}
-<div class="flex h-screen bg-gray-100" 
-     x-data="{ 
-         open: false, 
-         deleteModal: false, 
-         selectedAsset: null,
-         assets: {{ assets_json|safe }},
-         showAssetDetails(asset) {
-             this.selectedAsset = asset;
-             this.open = true;
-         },
-         showDeleteModal(asset) {
-             this.selectedAsset = asset;
-             this.deleteModal = true;
-         }
-     }">
-    <!-- Sidebar -->
+<div class="flex h-screen bg-gray-100">
     {% include 'assets/components/sidebar.html' %}
 
-    <!-- Main Content -->
     <main class="flex-1 overflow-y-auto">
         <!-- Top Bar -->
         <div class="bg-white shadow-sm">
@@ -86,7 +66,7 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                 <div class="flex space-x-3">
                                     <!-- View Details -->
-                                    <button @click="showAssetDetails({{ asset.to_dict|safe }})" 
+                                    <button onclick="showAssetDetails({{ asset.to_dict|safe }})" 
                                             class="text-blue-600 hover:text-blue-900">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
@@ -106,7 +86,7 @@
                                     </a>
 
                                     <!-- Delete -->
-                                    <button @click="showDeleteModal({{ asset.to_dict|safe }})"
+                                    <button onclick="showDeleteModal({{ asset.to_dict|safe }})"
                                             class="text-red-600 hover:text-red-900">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
@@ -132,4 +112,56 @@
     {% include 'assets/components/asset_modal.html' %}
     {% include 'assets/components/delete_modal.html' %}
 </div>
+
+<script>
+let selectedAsset = null;
+const assetModal = document.getElementById('assetModal');
+const deleteModal = document.getElementById('deleteModal');
+
+function showAssetDetails(asset) {
+    selectedAsset = asset;
+    updateAssetModalContent();
+    assetModal.classList.remove('hidden');
+}
+
+function showDeleteModal(asset) {
+    selectedAsset = asset;
+    updateDeleteModalContent();
+    deleteModal.classList.remove('hidden');
+}
+
+function hideModal(modalId) {
+    document.getElementById(modalId).classList.add('hidden');
+}
+
+function updateAssetModalContent() {
+    if (!selectedAsset) return;
+    
+    document.getElementById('modalTitle').textContent = `Asset Details - ${selectedAsset.name}`;
+    document.getElementById('modalAssetTag').textContent = selectedAsset.asset_tag;
+    document.getElementById('modalCategory').textContent = selectedAsset.category;
+    document.getElementById('modalManufacturer').textContent = selectedAsset.manufacturer;
+    document.getElementById('modalModel').textContent = selectedAsset.model;
+    document.getElementById('modalSerialNumber').textContent = selectedAsset.serial_number;
+    document.getElementById('modalStatus').textContent = selectedAsset.status;
+    document.getElementById('modalLocation').textContent = selectedAsset.location;
+    document.getElementById('modalNotes').textContent = selectedAsset.notes || 'No notes';
+}
+
+function updateDeleteModalContent() {
+    if (!selectedAsset) return;
+    document.getElementById('deleteAssetName').textContent = selectedAsset.name;
+    document.getElementById('deleteForm').action = `/assets/${selectedAsset.id}/delete/`;
+}
+
+// Close modals when clicking outside
+window.onclick = function(event) {
+    if (event.target === assetModal) {
+        hideModal('assetModal');
+    }
+    if (event.target === deleteModal) {
+        hideModal('deleteModal');
+    }
+}
+</script>
 {% endblock %}

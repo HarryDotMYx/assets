@@ -56,62 +56,61 @@
             </div>
         </div>
 
-        <!-- Modal -->
-        <div id="assignmentModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center">
-            <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-4">
-                <div class="flex items-center justify-between p-4 border-b">
-                    <h3 id="modalTitle" class="text-xl font-semibold text-gray-900"></h3>
-                    <button class="modal-close text-gray-400 hover:text-gray-500">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
-                    </button>
-                </div>
 
-                <div class="p-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-500">Asset Tag</label>
-                                <p id="modalAssetTag" class="mt-1 text-sm text-gray-900"></p>
-                            </div>
-                            <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-500">Assigned To</label>
-                                <p id="modalAssignedTo" class="mt-1 text-sm text-gray-900"></p>
-                            </div>
-                            <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-500">Assigned By</label>
-                                <p id="modalAssignedBy" class="mt-1 text-sm text-gray-900"></p>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-500">Assigned Date</label>
-                                <p id="modalAssignedDate" class="mt-1 text-sm text-gray-900"></p>
-                            </div>
-                            <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-500">Expected Return Date</label>
-                                <p id="modalExpectedReturn" class="mt-1 text-sm text-gray-900"></p>
-                            </div>
-                            <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-500">Return Date</label>
-                                <p id="modalReturnDate" class="mt-1 text-sm text-gray-900"></p>
-                            </div>
-                        </div>
+<!-- Modal -->
+<div id="assignmentModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-4">
+        <div class="flex items-center justify-between p-4 border-b">
+            <h3 id="modalTitle" class="text-xl font-semibold text-gray-900"></h3>
+            <button class="modal-close text-gray-400 hover:text-gray-500">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+
+        <div class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-500">Asset Tag</label>
+                        <p id="modalAssetTag" class="mt-1 text-sm text-gray-900"></p>
                     </div>
-                    <div class="mt-6">
-                        <label class="block text-sm font-medium text-gray-500">Notes</label>
-                        <p id="modalNotes" class="mt-1 text-sm text-gray-900"></p>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-500">Assigned To</label>
+                        <p id="modalAssignedTo" class="mt-1 text-sm text-gray-900"></p>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-500">Assigned By</label>
+                        <p id="modalAssignedBy" class="mt-1 text-sm text-gray-900"></p>
                     </div>
                 </div>
-
-                <div class="flex items-center justify-end px-6 py-4 bg-gray-50 border-t">
-                    <button class="modal-close px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-500">
-                        Close
-                    </button>
+                <div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-500">Assigned Date</label>
+                        <p id="modalAssignedDate" class="mt-1 text-sm text-gray-900"></p>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-500">Expected Return Date</label>
+                        <p id="modalExpectedReturn" class="mt-1 text-sm text-gray-900"></p>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-500">Return Date</label>
+                        <p id="modalReturnDate" class="mt-1 text-sm text-gray-900"></p>
+                    </div>
                 </div>
             </div>
+            <div class="mt-6">
+                <label class="block text-sm font-medium text-gray-500">Notes</label>
+                <p id="modalNotes" class="mt-1 text-sm text-gray-900"></p>
+            </div>
         </div>
-    </main>
+
+        <div class="flex items-center justify-end px-6 py-4 bg-gray-50 border-t">
+            <button class="close-btn px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-500">
+                Close
+            </button>
+        </div>
+    </div>
 </div>
 {% endblock %}
