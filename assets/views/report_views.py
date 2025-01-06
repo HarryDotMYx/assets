@@ -5,25 +5,41 @@ from django.template.loader import get_template
 from django.db.models import Count, Sum
 from xhtml2pdf import pisa
 from ..models import Asset, AssetAssignment, Maintenance
+from decimal import Decimal
 
 @login_required
 def reports_dashboard(request):
+    # Asset statistics
+    total_assets = Asset.objects.count()
+    active_assets = Asset.objects.exclude(status='retired').count()
+    total_cost = Asset.objects.aggregate(total=Sum('purchase_cost'))['total'] or Decimal('0')
+    maintenance_cost = Maintenance.objects.aggregate(total=Sum('cost'))['total'] or Decimal('0')
+    
     # Asset status distribution
-    status_data = Asset.objects.values('status').annotate(count=Count('id'))
+    status_data = list(Asset.objects.values('status')
+                      .annotate(count=Count('id'))
+                      .order_by('status'))
     
     # Category distribution
-    category_data = Asset.objects.values('category__name').annotate(count=Count('id'))
+    category_data = list(Asset.objects.values('category__name')
+                        .annotate(count=Count('id'))
+                        .order_by('-count'))
     
-    # Monthly maintenance costs
-    maintenance_costs = Maintenance.objects.values('maintenance_date__month').annotate(
-        total_cost=Sum('cost')
-    ).order_by('maintenance_date__month')
+    # Monthly maintenance costs for current year
+    maintenance_costs = list(Maintenance.objects
+                           .values('maintenance_date__month')
+                           .annotate(total_cost=Sum('cost'))
+                           .order_by('maintenance_date__month'))
     
     context = {
         'page_title': 'Reports',
-        'status_data': list(status_data),
-        'category_data': list(category_data),
-        'maintenance_costs': list(maintenance_costs)
+        'total_assets': total_assets,
+        'active_assets': active_assets,
+        'total_cost': total_cost,
+        'maintenance_cost': maintenance_cost,
+        'status_data': status_data,
+        'category_data': category_data,
+        'maintenance_costs': maintenance_costs
     }
     
     return render(request, 'assets/reports/dashboard.html', context)

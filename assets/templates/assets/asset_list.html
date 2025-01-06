@@ -10,14 +10,14 @@
      x-data="{ 
          open: false, 
          deleteModal: false, 
-         asset: null,
+         selectedAsset: null,
          assets: {{ assets_json|safe }},
-         showAssetDetails(assetId) {
-             this.asset = this.assets.find(a => a.id === assetId);
+         showAssetDetails(asset) {
+             this.selectedAsset = asset;
              this.open = true;
          },
-         showDeleteModal(assetId) {
-             this.asset = this.assets.find(a => a.id === assetId);
+         showDeleteModal(asset) {
+             this.selectedAsset = asset;
              this.deleteModal = true;
          }
      }">
@@ -86,7 +86,7 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                 <div class="flex space-x-3">
                                     <!-- View Details -->
-                                    <button @click="showAssetDetails({{ asset.id }})" 
+                                    <button @click="showAssetDetails({{ asset.to_dict|safe }})" 
                                             class="text-blue-600 hover:text-blue-900">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
@@ -106,7 +106,7 @@
                                     </a>
 
                                     <!-- Delete -->
-                                    <button @click="showDeleteModal({{ asset.id }})"
+                                    <button @click="showDeleteModal({{ asset.to_dict|safe }})"
                                             class="text-red-600 hover:text-red-900">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 

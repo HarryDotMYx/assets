@@ -17,6 +17,7 @@
                     <a href="{% url 'generate_pdf_report' %}" 
                        class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <title>Download PDF</title>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                                   d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
@@ -27,22 +28,21 @@
         </div>
 
         <div class="p-8">
+            
+            <!-- Charts Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Asset Status Distribution -->
-                <div class="bg-white p-6 rounded-lg shadow">
-                    <h2 class="text-lg font-semibold mb-4">Asset Status Distribution</h2>
+                <div class="bg-white p-6 rounded-lg shadow-sm">
                     <canvas id="statusChart"></canvas>
                 </div>
 
                 <!-- Category Distribution -->
-                <div class="bg-white p-6 rounded-lg shadow">
-                    <h2 class="text-lg font-semibold mb-4">Category Distribution</h2>
+                <div class="bg-white p-6 rounded-lg shadow-sm">
                     <canvas id="categoryChart"></canvas>
                 </div>
 
                 <!-- Monthly Maintenance Costs -->
-                <div class="bg-white p-6 rounded-lg shadow md:col-span-2">
-                    <h2 class="text-lg font-semibold mb-4">Monthly Maintenance Costs</h2>
+                <div class="bg-white p-6 rounded-lg shadow-sm md:col-span-2">
                     <canvas id="maintenanceChart"></canvas>
                 </div>
             </div>
@@ -52,84 +52,18 @@
 {% endblock %}
 
 {% block extra_scripts %}
-<script>
-    // Status Chart
-    const statusCtx = document.getElementById('statusChart').getContext('2d');
-    new Chart(statusCtx, {
-        type: 'bar',
-        data: {
-            labels: {{ status_data|safe|stringformat:"s"|slice:"1:-1"|safe }}.map(item => item.status),
-            datasets: [{
-                label: 'Number of Assets',
-                data: {{ status_data|safe|stringformat:"s"|slice:"1:-1"|safe }}.map(item => item.count),
-                backgroundColor: [
-                    'rgba(34, 197, 94, 0.6)',
-                    'rgba(59, 130, 246, 0.6)',
-                    'rgba(234, 179, 8, 0.6)',
-                    'rgba(239, 68, 68, 0.6)'
-                ]
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        stepSize: 1
-                    }
-                }
-            }
-        }
-    });
-
-    // Category Chart
-    const categoryCtx = document.getElementById('categoryChart').getContext('2d');
-    new Chart(categoryCtx, {
-        type: 'pie',
-        data: {
-            labels: {{ category_data|safe|stringformat:"s"|slice:"1:-1"|safe }}.map(item => item.category__name),
-            datasets: [{
-                data: {{ category_data|safe|stringformat:"s"|slice:"1:-1"|safe }}.map(item => item.count),
-                backgroundColor: [
-                    'rgba(59, 130, 246, 0.6)',
-                    'rgba(34, 197, 94, 0.6)',
-                    'rgba(234, 179, 8, 0.6)',
-                    'rgba(239, 68, 68, 0.6)',
-                    'rgba(168, 85, 247, 0.6)'
-                ]
-            }]
-        },
-        options: {
-            responsive: true
-        }
-    });
-
-    // Maintenance Costs Chart
-    const maintenanceCtx = document.getElementById('maintenanceChart').getContext('2d');
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    new Chart(maintenanceCtx, {
-        type: 'line',
-        data: {
-            labels: {{ maintenance_costs|safe|stringformat:"s"|slice:"1:-1"|safe }}
-                .map(item => months[item.maintenance_date__month - 1]),
-            datasets: [{
-                label: 'Maintenance Costs ($)',
-                data: {{ maintenance_costs|safe|stringformat:"s"|slice:"1:-1"|safe }}
-                    .map(item => item.total_cost),
-                borderColor: 'rgba(59, 130, 246, 1)',
-                backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                fill: true
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
+<script type="module">
+    import { setupCharts } from "{% static 'js/reports/charts.js' %}";
+    
+    // Initialize charts with data from the backend
+    try {
+        setupCharts(
+            {{ status_data|safe }},
+            {{ category_data|safe }},
+            {{ maintenance_costs|safe }}
+        );
+    } catch (error) {
+        console.error("Error initializing charts:", error);
+    }
 </script>
 {% endblock %}
