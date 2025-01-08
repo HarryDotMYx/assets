@@ -1,14 +1,12 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block extra_head %}
-<script type="module" src="{% static 'assets/js/assignments/main.js' %}"></script>
-{% endblock %}
-
 {% block content %}
-<div class="flex h-screen bg-gray-100" data-assignments='{{ assignments_json|safe }}'>
+<div class="flex h-screen bg-gray-100">
     {% include 'assets/components/sidebar.html' %}
 
+
+    <!-- Main Content -->
     <main class="flex-1 overflow-y-auto">
         <!-- Top Bar -->
         <div class="bg-white shadow-sm">
@@ -50,67 +48,73 @@
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                         </tr>
                     </thead>
-                    <tbody id="assignmentsTableBody" class="bg-white divide-y divide-gray-200">
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        {% for assignment in assignments %}
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ assignment.asset.name }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ assignment.assigned_to }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ assignment.assigned_date }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ assignment.return_date|default:"Not returned" }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <button class="text-blue-600 hover:text-blue-900" onclick="openModal('{{ assignment.id }}')">
+                                    View Details
+                                </button>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center py-4">No assignments available</td>
+                        </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
         </div>
-
+    </main>
+</div>
 
 <!-- Modal -->
-<div id="assignmentModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center">
-    <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-4">
-        <div class="flex items-center justify-between p-4 border-b">
-            <h3 id="modalTitle" class="text-xl font-semibold text-gray-900"></h3>
-            <button class="modal-close text-gray-400 hover:text-gray-500">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                </svg>
-            </button>
+<div id="modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-lg max-w-lg w-full p-6">
+        <div class="flex justify-between items-center">
+            <h2 class="text-xl font-semibold" id="modal-title"></h2>
+            <button class="text-gray-500 hover:text-gray-700" onclick="closeModal()">✖</button>
         </div>
-
-        <div class="p-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-500">Asset Tag</label>
-                        <p id="modalAssetTag" class="mt-1 text-sm text-gray-900"></p>
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-500">Assigned To</label>
-                        <p id="modalAssignedTo" class="mt-1 text-sm text-gray-900"></p>
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-500">Assigned By</label>
-                        <p id="modalAssignedBy" class="mt-1 text-sm text-gray-900"></p>
-                    </div>
-                </div>
-                <div>
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-500">Assigned Date</label>
-                        <p id="modalAssignedDate" class="mt-1 text-sm text-gray-900"></p>
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-500">Expected Return Date</label>
-                        <p id="modalExpectedReturn" class="mt-1 text-sm text-gray-900"></p>
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-500">Return Date</label>
-                        <p id="modalReturnDate" class="mt-1 text-sm text-gray-900"></p>
-                    </div>
-                </div>
-            </div>
-            <div class="mt-6">
-                <label class="block text-sm font-medium text-gray-500">Notes</label>
-                <p id="modalNotes" class="mt-1 text-sm text-gray-900"></p>
-            </div>
+        <div class="mt-4" id="modal-content">
+            <!-- Content will be dynamically updated -->
         </div>
-
-        <div class="flex items-center justify-end px-6 py-4 bg-gray-50 border-t">
-            <button class="close-btn px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-500">
-                Close
-            </button>
+        <div class="mt-6 text-right">
+            <button class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600" onclick="closeModal()">Close</button>
         </div>
     </div>
 </div>
+
+<script>
+    function openModal(id) {
+        const modal = document.getElementById('modal');
+        const title = document.getElementById('modal-title');
+        const content = document.getElementById('modal-content');
+
+        const assignment = {{ assignments_json|safe }}.find(a => a.id == id);
+
+        if (assignment) {
+            title.innerText = `Assignment Details - ${assignment.asset.name}`;
+            content.innerHTML = `
+                <p><strong>Asset Tag:</strong> ${assignment.asset.tag || 'N/A'}</p>
+                <p><strong>Assigned To:</strong> ${assignment.assigned_to}</p>
+                <p><strong>Assigned By:</strong> ${assignment.assigned_by}</p>
+                <p><strong>Assigned Date:</strong> ${assignment.assigned_date}</p>
+                <p><strong>Return Date:</strong> ${assignment.return_date || 'Not returned'}</p>
+                <p><strong>Notes:</strong> ${assignment.notes || 'No notes'}</p>
+            `;
+        }
+
+        modal.classList.remove('hidden');
+    }
+
+    function closeModal() {
+        const modal = document.getElementById('modal');
+        modal.classList.add('hidden');
+    }
+</script>
 {% endblock %}
