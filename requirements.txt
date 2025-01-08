@@ -4,4 +4,5 @@ django-cors-headers==4.6.0
 django-crispy-forms==2.3
 crispy-tailwind==1.0.3
 reportlab==4.2.5
-xhtml2pdf==0.2.16
+weasyprint==63.1
+tinyhtml5==2.0.0 

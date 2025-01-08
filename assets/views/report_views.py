@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
-from django.template.loader import get_template
+from django.template.loader import render_to_string
 from django.db.models import Count, Sum
-from xhtml2pdf import pisa
+from weasyprint import HTML
+from weasyprint.text.fonts import FontConfiguration
 from ..models import Asset, AssetAssignment, Maintenance
 from decimal import Decimal
 
@@ -51,20 +52,25 @@ def generate_pdf_report(request):
     assignments = AssetAssignment.objects.all().select_related('asset', 'assigned_to')
     maintenance_records = Maintenance.objects.all().select_related('asset')
     
-    template = get_template('assets/reports/pdf_template.html')
+    # Prepare the context
     context = {
         'assets': assets,
         'assignments': assignments,
         'maintenance_records': maintenance_records,
     }
     
-    html = template.render(context)
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="asset_report.pdf"'
+    # Render the HTML content
+    html_string = render_to_string('assets/reports/pdf_template.html', context)
     
-    # Create PDF
-    pisa_status = pisa.CreatePDF(html, dest=response)
-    if pisa_status.err:
-        return HttpResponse('PDF generation error')
+    # Configure fonts
+    font_config = FontConfiguration()
+    
+    # Create the PDF
+    html = HTML(string=html_string)
+    pdf = html.write_pdf(font_config=font_config)
+    
+    # Create the HTTP response
+    response = HttpResponse(pdf, content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="asset_report.pdf"'
     
     return response
