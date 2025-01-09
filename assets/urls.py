@@ -11,6 +11,9 @@ urlpatterns = [
     path('assignments/create/', views.assignment_create, name='assignment_create'),
     path('maintenance/', views.maintenance_list, name='maintenance_list'),
     path('maintenance/create/', views.maintenance_create, name='maintenance_create'),
+    path('maintenance/<int:pk>/edit/', views.maintenance_edit, name='maintenance_edit'),
+    path('maintenance/<int:pk>/delete/', views.maintenance_delete, name='maintenance_delete'),
+    path('maintenance/<int:pk>/details/', views.maintenance_details, name='maintenance_details'),
     path('reports/', views.reports_dashboard, name='reports_dashboard'),
     path('reports/pdf/', views.generate_pdf_report, name='generate_pdf_report'),
 ]

@@ -56,8 +56,10 @@
                             <td class="px-6 py-4 whitespace-nowrap">${{ record.cost }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ record.performed_by }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                <a href="#" class="text-blue-600 hover:text-blue-900 mr-3">Edit</a>
-                                <a href="#" class="text-red-600 hover:text-red-900">Delete</a>
+                                <button onclick="showMaintenanceDetails({{ record.id }})" 
+                                        class="text-blue-600 hover:text-blue-900 mr-3">
+                                    View Details
+                                </button>
                             </td>
                         </tr>
                         {% empty %}
@@ -72,5 +74,68 @@
             </div>
         </div>
     </main>
+
+    {% include 'assets/components/maintenance_modal.html' %}
 </div>
+
+<script>
+let selectedRecord = null;
+
+function showMaintenanceDetails(id) {
+    // Fetch maintenance record details
+    fetch(`/maintenance/${id}/details/`)
+        .then(response => response.json())
+        .then(record => {
+            selectedRecord = record;
+            updateModalContent();
+            showModal('maintenanceModal');
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+function updateModalContent() {
+    if (!selectedRecord) return;
+    
+    document.getElementById('modalTitle').textContent = `Maintenance Details - ${selectedRecord.asset_name}`;
+    document.getElementById('modalAsset').textContent = selectedRecord.asset_name;
+    document.getElementById('modalType').textContent = selectedRecord.maintenance_type;
+    document.getElementById('modalDate').textContent = selectedRecord.maintenance_date;
+    document.getElementById('modalCost').textContent = `$${selectedRecord.cost}`;
+    document.getElementById('modalPerformedBy').textContent = selectedRecord.performed_by;
+    document.getElementById('modalNextDate').textContent = selectedRecord.next_maintenance_date || 'Not specified';
+    document.getElementById('modalNotes').textContent = selectedRecord.notes || 'No notes';
+    
+    // Update edit link
+    document.getElementById('editButton').href = `/maintenance/${selectedRecord.id}/edit/`;
+    
+    // Update delete form action
+    document.getElementById('deleteForm').action = `/maintenance/${selectedRecord.id}/delete/`;
+}
+
+function showDeleteModal() {
+    hideModal('maintenanceModal');
+    showModal('deleteMaintenanceModal');
+}
+
+function showModal(modalId) {
+    document.getElementById(modalId).classList.remove('hidden');
+}
+
+function hideModal(modalId) {
+    document.getElementById(modalId).classList.add('hidden');
+}
+
+// Close modals when clicking outside
+window.onclick = function(event) {
+    const maintenanceModal = document.getElementById('maintenanceModal');
+    const deleteModal = document.getElementById('deleteMaintenanceModal');
+    
+    if (event.target === maintenanceModal) {
+        hideModal('maintenanceModal');
+    }
+    if (event.target === deleteModal) {
+        hideModal('deleteMaintenanceModal');
+    }
+}
+</script>
 {% endblock %}

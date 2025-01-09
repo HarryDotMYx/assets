@@ -1,0 +1,102 @@
+<!-- Maintenance Details Modal -->
+<div id="maintenanceModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-4">
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between p-4 border-b">
+            <h3 id="modalTitle" class="text-xl font-semibold text-gray-900"></h3>
+            <button onclick="hideModal('maintenanceModal')" class="text-gray-400 hover:text-gray-500">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Modal Content -->
+        <div class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-500">Asset</label>
+                        <p id="modalAsset" class="mt-1 text-sm text-gray-900"></p>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-500">Maintenance Type</label>
+                        <p id="modalType" class="mt-1 text-sm text-gray-900"></p>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-500">Date</label>
+                        <p id="modalDate" class="mt-1 text-sm text-gray-900"></p>
+                    </div>
+                </div>
+                <div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-500">Cost</label>
+                        <p id="modalCost" class="mt-1 text-sm text-gray-900"></p>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-500">Performed By</label>
+                        <p id="modalPerformedBy" class="mt-1 text-sm text-gray-900"></p>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-500">Next Maintenance Date</label>
+                        <p id="modalNextDate" class="mt-1 text-sm text-gray-900"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-6">
+                <label class="block text-sm font-medium text-gray-500">Notes</label>
+                <p id="modalNotes" class="mt-1 text-sm text-gray-900"></p>
+            </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="flex items-center justify-end px-6 py-4 bg-gray-50 border-t space-x-4">
+            <button onclick="hideModal('maintenanceModal')" 
+                    class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-500">
+                Close
+            </button>
+            <a id="editButton" href="#" 
+               class="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md">
+                Edit
+            </a>
+            <button id="deleteButton" onclick="showDeleteModal()"
+                    class="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-md">
+                Delete
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteMaintenanceModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+    <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+        <div class="p-6">
+            <div class="flex items-center justify-center w-12 h-12 mx-auto bg-red-100 rounded-full">
+                <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+            </div>
+            
+            <div class="mt-4 text-center">
+                <h3 class="text-lg font-medium text-gray-900">Delete Maintenance Record</h3>
+                <p class="mt-2 text-sm text-gray-500">
+                    Are you sure you want to delete this maintenance record? This action cannot be undone.
+                </p>
+            </div>
+        </div>
+        
+        <div class="px-6 py-4 bg-gray-50 flex justify-end space-x-4">
+            <button onclick="hideModal('deleteMaintenanceModal')" 
+                    class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-500">
+                Cancel
+            </button>
+            <form id="deleteForm" method="POST" class="inline">
+                {% csrf_token %}
+                <button type="submit" 
+                        class="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-md">
+                    Delete
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

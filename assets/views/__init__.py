@@ -9,7 +9,12 @@ from .form_views import (
     maintenance_create
 )
 from .assignment_views import assignment_list
-from .maintenance_views import maintenance_list
+from .maintenance_views import (
+    maintenance_list,
+    maintenance_edit,
+    maintenance_delete,
+    maintenance_details
+)
 from .dashboard_views import dashboard
 from .report_views import reports_dashboard, generate_pdf_report
 
@@ -22,6 +27,9 @@ __all__ = [
     'assignment_create',
     'maintenance_list',
     'maintenance_create',
+    'maintenance_edit',
+    'maintenance_delete',
+    'maintenance_details',
     'dashboard',
     'reports_dashboard',
     'generate_pdf_report'
