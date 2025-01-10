@@ -52,7 +52,6 @@
                     <thead class="bg-gray-50">
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Asset Tag</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
@@ -64,7 +63,6 @@
                         {% for asset in assets %}
                         <tr class="asset-row">
                             <td class="px-6 py-4 whitespace-nowrap">{{ asset.asset_tag }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">{{ asset.name }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ asset.category.name }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
@@ -80,29 +78,29 @@
                             <!-- Warranty -->
 
                             <td class="px-6 py-4 whitespace-nowrap">
-    {% if asset.warranty_expiry %}
-        <div class="flex items-center">
-            <span class="text-sm text-gray-600 mr-2">{{ asset.warranty_expiry|date:"d/m/Y" }}</span>
-            {% with days_left=asset.warranty_expiry|timeuntil %}
-                {% if "past" in days_left or "0 minutes" in days_left %}
-                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                        EXPIRED
-                    </span>
-                {% elif days_left == "1 day" %}
-                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                        EXPIRES TODAY
-                    </span>
-                {% else %}
-                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                        {{ days_left|upper }} LEFT
-                    </span>
-                {% endif %}
-            {% endwith %}
-        </div>
-    {% else %}
-        <span class="text-sm text-gray-500">No warranty</span>
-    {% endif %}
-</td>
+                                {% if asset.warranty_expiry %}
+                                    <div class="flex items-center">
+                                        <span class="text-sm text-gray-600 mr-2">{{ asset.warranty_expiry|date:"d/m/Y" }}</span>
+                                        {% with days_until=asset.warranty_expiry|timeuntil:now %}
+                                            {% if asset.warranty_expiry < now %}
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                                    EXPIRED
+                                                </span>
+                                            {% elif days_until == "0 minutes" %}
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                                    EXPIRES TODAY
+                                                </span>
+                                            {% else %}
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                    {{ days_until|upper }} LEFT
+                                                </span>
+                                            {% endif %}
+                                        {% endwith %}
+                                    </div>
+                                {% else %}
+                                    <span class="text-sm text-gray-500">No warranty</span>
+                                {% endif %}
+                            </td>
 
                             
                             

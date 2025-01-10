@@ -14,10 +14,95 @@
 
         <div class="p-8">
             <div class="bg-white rounded-lg shadow-sm p-6">
-                <h2 class="text-lg font-semibold text-gray-800 mb-6">
-                    {% if form.instance.pk %}Edit Asset{% else %}Add New Asset{% endif %}
-                </h2>
-                {% crispy form %}
+                <div class="mb-6">
+                    <h2 class="text-lg font-semibold text-gray-800">
+                        {% if form.instance.pk %}Edit Asset{% else %}Add New Asset{% endif %}
+                    </h2>
+                    <p class="text-sm text-gray-600">Enter the asset details below</p>
+                </div>
+
+                {% if messages %}
+                <div class="mb-6">
+                    {% for message in messages %}
+                    <div class="p-4 rounded-lg {% if message.tags == 'success' %}bg-green-100 text-green-700{% else %}bg-red-100 text-red-700{% endif %}">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <form method="post" class="space-y-6">
+                    {% csrf_token %}
+                    
+                    <!-- First Row -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Asset Tag*</label>
+                            {{ form.asset_tag }}
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Category*</label>
+                            {{ form.category }}
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Status*</label>
+                            {{ form.status }}
+                        </div>
+                    </div>
+
+                    <!-- Second Row -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Manufacturer*</label>
+                            {{ form.manufacturer }}
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Model*</label>
+                            {{ form.model }}
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Serial Number*</label>
+                            {{ form.serial_number }}
+                        </div>
+                    </div>
+
+                    <!-- Third Row -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Purchase Date*</label>
+                            {{ form.purchase_date }}
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Purchase Cost*</label>
+                            {{ form.purchase_cost }}
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Warranty Expiry*</label>
+                            {{ form.warranty_expiry }}
+                        </div>
+                    </div>
+
+                    <!-- Fourth Row -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Location*</label>
+                            {{ form.location }}
+                        </div>
+                    </div>
+
+                    <!-- Notes -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Notes</label>
+                        {{ form.notes }}
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="flex justify-end">
+                        <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
+                            {% if form.instance.pk %}Update Asset{% else %}Save Asset{% endif %}
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </main>

@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import JsonResponse
+from django.utils import timezone
 from ..models import Asset
 
 @login_required
@@ -11,7 +12,8 @@ def asset_list(request):
     return render(request, 'assets/asset_list.html', {
         'assets': assets,
         'assets_json': assets_data,
-        'page_title': 'Assets'
+        'page_title': 'Assets',
+        'now': timezone.now().date()  # Add current date to context
     })
 
 @login_required
