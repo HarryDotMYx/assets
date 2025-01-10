@@ -53,7 +53,7 @@
                             <td class="px-6 py-4 whitespace-nowrap">{{ record.asset.name }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ record.maintenance_type }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ record.maintenance_date|date:"M d, Y" }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">${{ record.cost }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">RM {{ record.cost }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ record.performed_by }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                 <button onclick="showMaintenanceDetails({{ record.id }})" 
@@ -100,7 +100,7 @@ function updateModalContent() {
     document.getElementById('modalAsset').textContent = selectedRecord.asset_name;
     document.getElementById('modalType').textContent = selectedRecord.maintenance_type;
     document.getElementById('modalDate').textContent = selectedRecord.maintenance_date;
-    document.getElementById('modalCost').textContent = `$${selectedRecord.cost}`;
+    document.getElementById('modalCost').textContent = `RM ${selectedRecord.cost}`;
     document.getElementById('modalPerformedBy').textContent = selectedRecord.performed_by;
     document.getElementById('modalNextDate').textContent = selectedRecord.next_maintenance_date || 'Not specified';
     document.getElementById('modalNotes').textContent = selectedRecord.notes || 'No notes';

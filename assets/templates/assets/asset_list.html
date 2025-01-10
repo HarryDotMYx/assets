@@ -27,12 +27,24 @@
                     <h2 class="text-lg font-semibold text-gray-800">Assets</h2>
                     <p class="text-sm text-gray-600">Manage your assets</p>
                 </div>
-                <a href="{% url 'asset_create' %}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                    </svg>
-                    Add New Asset
-                </a>
+                <div class="flex items-center space-x-4">
+                    <!-- Search Bar -->
+                    <div class="relative">
+                        <input type="text" 
+                               id="searchInput"
+                               placeholder="Search assets..."
+                               class="w-64 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <svg class="w-5 h-5 absolute right-3 top-2.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                    </div>
+                    <a href="{% url 'asset_create' %}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Add New Asset
+                    </a>
+                </div>
             </div>
 
             <div class="bg-white rounded-lg shadow overflow-hidden">
@@ -44,12 +56,13 @@
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Warranty</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         {% for asset in assets %}
-                        <tr>
+                        <tr class="asset-row">
                             <td class="px-6 py-4 whitespace-nowrap">{{ asset.asset_tag }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ asset.name }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ asset.category.name }}</td>
@@ -63,6 +76,38 @@
                                 </span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ asset.location }}</td>
+
+                            <!-- Warranty -->
+
+                            <td class="px-6 py-4 whitespace-nowrap">
+    {% if asset.warranty_expiry %}
+        <div class="flex items-center">
+            <span class="text-sm text-gray-600 mr-2">{{ asset.warranty_expiry|date:"d/m/Y" }}</span>
+            {% with days_left=asset.warranty_expiry|timeuntil %}
+                {% if "past" in days_left or "0 minutes" in days_left %}
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                        EXPIRED
+                    </span>
+                {% elif days_left == "1 day" %}
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                        EXPIRES TODAY
+                    </span>
+                {% else %}
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                        {{ days_left|upper }} LEFT
+                    </span>
+                {% endif %}
+            {% endwith %}
+        </div>
+    {% else %}
+        <span class="text-sm text-gray-500">No warranty</span>
+    {% endif %}
+</td>
+
+                            
+                            
+                            
+                            <!-- Warranty End Here -->
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                 <div class="flex space-x-3">
                                     <!-- View Details -->
@@ -98,7 +143,7 @@
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                            <td colspan="7" class="px-6 py-4 text-center text-gray-500">
                                 No assets found
                             </td>
                         </tr>
@@ -117,6 +162,17 @@
 let selectedAsset = null;
 const assetModal = document.getElementById('assetModal');
 const deleteModal = document.getElementById('deleteModal');
+
+// Search functionality
+document.getElementById('searchInput').addEventListener('input', function(e) {
+    const searchTerm = e.target.value.toLowerCase();
+    const rows = document.querySelectorAll('.asset-row');
+    
+    rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(searchTerm) ? '' : 'none';
+    });
+});
 
 function showAssetDetails(asset) {
     selectedAsset = asset;

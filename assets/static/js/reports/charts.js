@@ -82,15 +82,15 @@ function setupMaintenanceChart(data) {
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     
     new Chart(ctx, {
-        type: 'line',
+        type: 'bar',
         data: {
             labels: data.map(item => months[item.maintenance_date__month - 1]),
             datasets: [{
-                label: 'Maintenance Costs ($)',
+                label: 'Maintenance Costs (MYR)',
                 data: data.map(item => item.total_cost),
+                backgroundColor: 'rgba(59, 130, 246, 0.6)',
                 borderColor: 'rgba(59, 130, 246, 1)',
-                backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                fill: true
+                borderWidth: 1
             }]
         },
         options: {
@@ -108,7 +108,7 @@ function setupMaintenanceChart(data) {
                 y: {
                     beginAtZero: true,
                     ticks: {
-                        callback: value => '$' + value
+                        callback: value => 'RM ' + value.toFixed(2)
                     }
                 }
             }

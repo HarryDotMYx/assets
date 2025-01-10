@@ -6,16 +6,9 @@ from django.db.models import Count, Sum
 from weasyprint import HTML
 from weasyprint.text.fonts import FontConfiguration
 from ..models import Asset, AssetAssignment, Maintenance
-from decimal import Decimal
 
 @login_required
 def reports_dashboard(request):
-    # Asset statistics
-    total_assets = Asset.objects.count()
-    active_assets = Asset.objects.exclude(status='retired').count()
-    total_cost = Asset.objects.aggregate(total=Sum('purchase_cost'))['total'] or Decimal('0')
-    maintenance_cost = Maintenance.objects.aggregate(total=Sum('cost'))['total'] or Decimal('0')
-    
     # Asset status distribution
     status_data = list(Asset.objects.values('status')
                       .annotate(count=Count('id'))
@@ -32,12 +25,12 @@ def reports_dashboard(request):
                            .annotate(total_cost=Sum('cost'))
                            .order_by('maintenance_date__month'))
     
+    # Convert Decimal to float for JSON serialization
+    for record in maintenance_costs:
+        record['total_cost'] = float(record['total_cost']) if record['total_cost'] else 0
+    
     context = {
         'page_title': 'Reports',
-        'total_assets': total_assets,
-        'active_assets': active_assets,
-        'total_cost': total_cost,
-        'maintenance_cost': maintenance_cost,
         'status_data': status_data,
         'category_data': category_data,
         'maintenance_costs': maintenance_costs
