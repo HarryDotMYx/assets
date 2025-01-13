@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
             ['MSI', 'MSI'],
             ['Razer', 'Razer'],
             ['Samsung', 'Samsung']
+            ['GG', 'GG']
         ],
         server: [
             ['Dell', 'Dell (PowerEdge)'],
