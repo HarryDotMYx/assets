@@ -18,6 +18,7 @@ class Asset(models.Model):
     placement = models.ForeignKey(Placement, on_delete=models.PROTECT, null=True)
     manufacturer = models.CharField(max_length=100)
     model = models.CharField(max_length=100)
+    vendor = models.CharField(max_length=200, blank=True)  # New vendor field
     sku = models.CharField(max_length=100, null=True, blank=True)
     serial_number = models.CharField(max_length=100, unique=True)
     purchase_date = models.DateField()
@@ -42,6 +43,7 @@ class Asset(models.Model):
             'category': str(self.category),
             'manufacturer': self.manufacturer,
             'model': self.model,
+            'vendor': self.vendor,
             'serial_number': self.serial_number,
             'status': self.get_status_display(),
             'location': self.location,

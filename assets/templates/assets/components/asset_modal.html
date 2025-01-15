@@ -1,6 +1,6 @@
 <!-- Asset Details Modal -->
 <div id="assetModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-    <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-4">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl mx-4">
         <!-- Modal Header -->
         <div class="flex items-center justify-between p-4 border-b">
             <h3 id="modalTitle" class="text-xl font-semibold text-gray-900"></h3>
@@ -14,42 +14,66 @@
         <!-- Modal Content -->
         <div class="p-6">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-500">Asset Tag</label>
-                        <p id="modalAssetTag" class="mt-1 text-sm text-gray-900"></p>
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-500">Category</label>
-                        <p id="modalCategory" class="mt-1 text-sm text-gray-900"></p>
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-500">Manufacturer</label>
-                        <p id="modalManufacturer" class="mt-1 text-sm text-gray-900"></p>
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-500">Model</label>
-                        <p id="modalModel" class="mt-1 text-sm text-gray-900"></p>
-                    </div>
-                </div>
-                <div>
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-500">Serial Number</label>
-                        <p id="modalSerialNumber" class="mt-1 text-sm text-gray-900"></p>
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-500">Status</label>
-                        <p id="modalStatus" class="mt-1 text-sm text-gray-900"></p>
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-500">Location</label>
-                        <p id="modalLocation" class="mt-1 text-sm text-gray-900"></p>
+                <!-- Basic Information -->
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <h4 class="font-medium text-gray-700 mb-3">Basic Information</h4>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-500">Asset Tag</label>
+                            <p id="modalAssetTag" class="mt-1 text-sm text-gray-900"></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-500">Category</label>
+                            <p id="modalCategory" class="mt-1 text-sm text-gray-900"></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-500">Status</label>
+                            <p id="modalStatus" class="mt-1 text-sm text-gray-900"></p>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="mt-6">
-                <label class="block text-sm font-medium text-gray-500">Notes</label>
-                <p id="modalNotes" class="mt-1 text-sm text-gray-900"></p>
+
+                <!-- Manufacturer & Vendor Details -->
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <h4 class="font-medium text-gray-700 mb-3">Manufacturer & Vendor Details</h4>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-500">Manufacturer</label>
+                            <p id="modalManufacturer" class="mt-1 text-sm text-gray-900"></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-500">Model</label>
+                            <p id="modalModel" class="mt-1 text-sm text-gray-900"></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-500">Vendor</label>
+                            <p id="modalVendor" class="mt-1 text-sm text-gray-900"></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-500">Serial Number</label>
+                            <p id="modalSerialNumber" class="mt-1 text-sm text-gray-900"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Location & Additional Info -->
+                <div class="bg-gray-50 p-4 rounded-lg md:col-span-2">
+                    <h4 class="font-medium text-gray-700 mb-3">Location & Additional Information</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-500">Location</label>
+                            <p id="modalLocation" class="mt-1 text-sm text-gray-900"></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-500">Person in Charge</label>
+                            <p id="modalPersonInCharge" class="mt-1 text-sm text-gray-900"></p>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <label class="block text-sm font-medium text-gray-500">Notes</label>
+                        <p id="modalNotes" class="mt-1 text-sm text-gray-900"></p>
+                    </div>
+                </div>
             </div>
         </div>
 
