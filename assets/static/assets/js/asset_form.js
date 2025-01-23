@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', function() {
             ['MSI', 'MSI'],
             ['Razer', 'Razer'],
             ['Samsung', 'Samsung']
-            ['GG', 'GG']
         ],
         server: [
             ['Dell', 'Dell (PowerEdge)'],
@@ -67,20 +66,33 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     function updateManufacturerOptions(assetType) {
-        const options = manufacturers[assetType] || manufacturers.laptop;
-        manufacturerSelect.innerHTML = '';
+        if (!manufacturerSelect) return;
+        
+        const options = manufacturers[assetType] || manufacturers.other;
+        const currentManufacturer = manufacturerSelect.getAttribute('data-current-value');
+        
+        manufacturerSelect.innerHTML = '<option value="">Select Manufacturer</option>';
+        
         options.forEach(([value, label]) => {
             const option = new Option(label, value);
+            if (value === currentManufacturer) {
+                option.selected = true;
+            }
             manufacturerSelect.add(option);
         });
     }
 
     if (assetTypeSelect && manufacturerSelect) {
+        // Store the current manufacturer value
+        const currentManufacturer = manufacturerSelect.value;
+        manufacturerSelect.setAttribute('data-current-value', currentManufacturer);
+        
+        // Initial update
+        updateManufacturerOptions(assetTypeSelect.value);
+        
+        // Update on change
         assetTypeSelect.addEventListener('change', (e) => {
             updateManufacturerOptions(e.target.value);
         });
-        
-        // Set initial options based on current asset type
-        updateManufacturerOptions(assetTypeSelect.value);
     }
 });

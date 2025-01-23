@@ -22,29 +22,55 @@
         </div>
 
         <div class="p-8">
+            <!-- Messages Section -->
+            {% if messages %}
+            <div class="mb-6" id="message-container">
+                {% for message in messages %}
+                <div class="message-alert p-4 rounded-lg mb-4 {% if message.tags == 'success' %}bg-green-100 text-green-700 border border-green-400{% elif message.tags == 'error' %}bg-red-100 text-red-700 border border-red-400{% endif %} flex items-center justify-between">
+                    <div class="flex items-center">
+                        {% if message.tags == 'success' %}
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        {% else %}
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        {% endif %}
+                        {{ message }}
+                    </div>
+                    <button onclick="this.parentElement.remove()" class="text-gray-500 hover:text-gray-700">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
             <div class="flex justify-between items-center mb-6">
                 <div>
                     <h2 class="text-lg font-semibold text-gray-800">Assets</h2>
                     <p class="text-sm text-gray-600">Manage your assets</p>
                 </div>
                 <div class="flex items-center space-x-4">
-                        <!-- Search Bar -->
-                        <div class="relative">
-                            <input type="text" 
-                                   id="searchInput"
-                                   placeholder="Search assets..."
-                                   class="w-64 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                            <svg class="w-5 h-5 absolute right-3 top-2.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                            </svg>
-                        </div>
-                        <a href="{% url 'asset_create' %}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                            </svg>
-                            Add New Asset
-                        </a>
+                    <!-- Search Bar -->
+                    <div class="relative">
+                        <input type="text" 
+                               id="searchInput"
+                               placeholder="Search assets..."
+                               class="w-64 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <svg class="w-5 h-5 absolute right-3 top-2.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
                     </div>
+                    <a href="{% url 'asset_create' %}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Add New Asset
+                    </a>
                 </div>
             </div>
 
@@ -80,7 +106,7 @@
                             <td class="px-6 py-4 whitespace-nowrap">{{ asset.location }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 {% if asset.warranty_expiry %}
-                                    <div class="flex items-center">
+                                    <div class="flex items-center warranty-info">
                                         <span class="text-sm text-gray-600 mr-2">{{ asset.warranty_expiry|date:"d/m/Y" }}</span>
                                         {% with days_until=asset.warranty_expiry|timeuntil:now %}
                                             {% if asset.warranty_expiry < now %}
@@ -142,7 +168,7 @@
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="8" class="px-6 py-4 text-center text-gray-500">
+                            <td colspan="9" class="px-6 py-4 text-center text-gray-500">
                                 No assets found
                             </td>
                         </tr>
@@ -158,6 +184,18 @@
 </div>
 
 <script>
+// Only hide message alerts, not other elements
+document.addEventListener('DOMContentLoaded', function() {
+    const messageAlerts = document.querySelectorAll('.message-alert');
+    messageAlerts.forEach(message => {
+        setTimeout(() => {
+            message.style.transition = 'opacity 0.5s ease-in-out';
+            message.style.opacity = '0';
+            setTimeout(() => message.remove(), 500);
+        }, 5000);
+    });
+});
+
 let selectedAsset = null;
 const assetModal = document.getElementById('assetModal');
 const deleteModal = document.getElementById('deleteModal');
@@ -200,6 +238,7 @@ function updateAssetModalContent() {
     document.getElementById('modalSerialNumber').textContent = selectedAsset.serial_number;
     document.getElementById('modalStatus').textContent = selectedAsset.status;
     document.getElementById('modalLocation').textContent = selectedAsset.location;
+    document.getElementById('modalPersonInCharge').textContent = selectedAsset.person_in_charge;
     document.getElementById('modalNotes').textContent = selectedAsset.notes || 'No notes';
 }
 

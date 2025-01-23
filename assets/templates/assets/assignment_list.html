@@ -5,8 +5,6 @@
 <div class="flex h-screen bg-gray-100">
     {% include 'assets/components/sidebar.html' %}
 
-
-    <!-- Main Content -->
     <main class="flex-1 overflow-y-auto">
         <!-- Top Bar -->
         <div class="bg-white shadow-sm">
@@ -41,8 +39,10 @@
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Asset</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Asset Tag</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Asset Name</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Assigned To</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Assigned By</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Assigned Date</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Return Date</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
@@ -51,19 +51,67 @@
                     <tbody class="bg-white divide-y divide-gray-200">
                         {% for assignment in assignments %}
                         <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ assignment.asset.asset_tag }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ assignment.asset.name }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ assignment.assigned_to }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">{{ assignment.assigned_date }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">{{ assignment.return_date|default:"Not returned" }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ assignment.assigned_by }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ assignment.assigned_date|date:"M d, Y" }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <button class="text-blue-600 hover:text-blue-900" onclick="openModal('{{ assignment.id }}')">
-                                    View Details
-                                </button>
+                                {% if assignment.return_date %}
+                                    {{ assignment.return_date|date:"M d, Y" }}
+                                {% else %}
+                                    <span class="text-yellow-600">Not returned</span>
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                <div class="flex space-x-3">
+                                    <!-- View Details -->
+                                    <button onclick="showAssignmentDetails({{ assignment.id }})" 
+                                            class="text-blue-600 hover:text-blue-900">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                        </svg>
+                                    </button>
+
+                                    <!-- Edit -->
+                                    <a href="{% url 'assignment_edit' assignment.id %}" 
+                                       class="text-indigo-600 hover:text-indigo-900">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                        </svg>
+                                    </a>
+
+                                    <!-- Return Asset -->
+                                    {% if not assignment.return_date %}
+                                    <button onclick="showReturnModal({{ assignment.id }})"
+                                            class="text-green-600 hover:text-green-900">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                                  d="M9 11l3-3m0 0l3 3m-3-3v8m0-13a9 9 0 110 18 9 9 0 010-18z"/>
+                                        </svg>
+                                    </button>
+                                    {% endif %}
+
+                                    <!-- Delete -->
+                                    <button onclick="showDeleteModal({{ assignment.id }})"
+                                            class="text-red-600 hover:text-red-900">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                        </svg>
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="5" class="text-center py-4">No assignments available</td>
+                            <td colspan="7" class="px-6 py-4 text-center text-gray-500">
+                                No assignments found
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -71,50 +119,67 @@
             </div>
         </div>
     </main>
-</div>
 
-<!-- Modal -->
-<div id="modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div class="bg-white rounded-lg shadow-lg max-w-lg w-full p-6">
-        <div class="flex justify-between items-center">
-            <h2 class="text-xl font-semibold" id="modal-title"></h2>
-            <button class="text-gray-500 hover:text-gray-700" onclick="closeModal()">✖</button>
-        </div>
-        <div class="mt-4" id="modal-content">
-            <!-- Content will be dynamically updated -->
-        </div>
-        <div class="mt-6 text-right">
-            <button class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600" onclick="closeModal()">Close</button>
-        </div>
-    </div>
+    {% include 'assets/components/assignment_modal.html' %}
+    {% include 'assets/components/return_modal.html' %}
+    {% include 'assets/components/delete_modal.html' %}
 </div>
 
 <script>
-    function openModal(id) {
-        const modal = document.getElementById('modal');
-        const title = document.getElementById('modal-title');
-        const content = document.getElementById('modal-content');
+let selectedAssignment = null;
+const assignments = {{ assignments_json|safe }};
 
-        const assignment = {{ assignments_json|safe }}.find(a => a.id == id);
+function showAssignmentDetails(id) {
+    selectedAssignment = assignments.find(a => a.id === id);
+    if (selectedAssignment) {
+        document.getElementById('modalTitle').textContent = `Assignment Details - ${selectedAssignment.asset.name}`;
+        document.getElementById('modalAssetTag').textContent = selectedAssignment.asset.asset_tag;
+        document.getElementById('modalAssignedTo').textContent = selectedAssignment.assigned_to;
+        document.getElementById('modalAssignedBy').textContent = selectedAssignment.assigned_by;
+        document.getElementById('modalAssignedDate').textContent = selectedAssignment.assigned_date;
+        document.getElementById('modalExpectedReturn').textContent = selectedAssignment.expected_return_date || 'Not specified';
+        document.getElementById('modalReturnDate').textContent = selectedAssignment.return_date || 'Not returned';
+        document.getElementById('modalNotes').textContent = selectedAssignment.notes || 'No notes';
+        
+        showModal('assignmentModal');
+    }
+}
 
-        if (assignment) {
-            title.innerText = `Assignment Details - ${assignment.asset.name}`;
-            content.innerHTML = `
-                <p><strong>Asset Tag:</strong> ${assignment.asset.tag || 'N/A'}</p>
-                <p><strong>Assigned To:</strong> ${assignment.assigned_to}</p>
-                <p><strong>Assigned By:</strong> ${assignment.assigned_by}</p>
-                <p><strong>Assigned Date:</strong> ${assignment.assigned_date}</p>
-                <p><strong>Return Date:</strong> ${assignment.return_date || 'Not returned'}</p>
-                <p><strong>Notes:</strong> ${assignment.notes || 'No notes'}</p>
-            `;
+function showReturnModal(id) {
+    selectedAssignment = assignments.find(a => a.id === id);
+    if (selectedAssignment) {
+        document.getElementById('returnAssetName').textContent = selectedAssignment.asset.name;
+        document.getElementById('returnForm').action = `/assignments/${id}/return/`;
+        showModal('returnModal');
+    }
+}
+
+function showDeleteModal(id) {
+    selectedAssignment = assignments.find(a => a.id === id);
+    if (selectedAssignment) {
+        document.getElementById('deleteAssetName').textContent = selectedAssignment.asset.name;
+        document.getElementById('deleteForm').action = `/assignments/${id}/delete/`;
+        showModal('deleteModal');
+    }
+}
+
+function showModal(modalId) {
+    document.getElementById(modalId).classList.remove('hidden');
+}
+
+function hideModal(modalId) {
+    document.getElementById(modalId).classList.add('hidden');
+}
+
+// Close modals when clicking outside
+window.onclick = function(event) {
+    const modals = ['assignmentModal', 'returnModal', 'deleteModal'];
+    modals.forEach(modalId => {
+        const modal = document.getElementById(modalId);
+        if (event.target === modal) {
+            hideModal(modalId);
         }
-
-        modal.classList.remove('hidden');
-    }
-
-    function closeModal() {
-        const modal = document.getElementById('modal');
-        modal.classList.add('hidden');
-    }
+    });
+}
 </script>
 {% endblock %}

@@ -12,13 +12,13 @@ class Asset(models.Model):
     ]
 
     asset_tag = models.CharField(max_length=50, unique=True)
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200)  # Asset name field
     category = models.ForeignKey(Category, on_delete=models.PROTECT)
     asset_type = models.ForeignKey(AssetType, on_delete=models.PROTECT, null=True)
     placement = models.ForeignKey(Placement, on_delete=models.PROTECT, null=True)
     manufacturer = models.CharField(max_length=100)
     model = models.CharField(max_length=100)
-    vendor = models.CharField(max_length=200, blank=True)  # New vendor field
+    vendor = models.CharField(max_length=200, blank=True)
     sku = models.CharField(max_length=100, null=True, blank=True)
     serial_number = models.CharField(max_length=100, unique=True)
     purchase_date = models.DateField()
@@ -48,7 +48,10 @@ class Asset(models.Model):
             'status': self.get_status_display(),
             'location': self.location,
             'notes': self.notes,
-            'person_in_charge': self.person_in_charge,
+            'person_in_charge': self.person_in_charge or 'Not assigned',
             'purchase_date': self.purchase_date.isoformat() if self.purchase_date else None,
             'warranty_expiry': self.warranty_expiry.isoformat() if self.warranty_expiry else None,
         }
+
+    class Meta:
+        ordering = ['-created_at']

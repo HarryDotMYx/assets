@@ -1,8 +1,8 @@
-Django==5.1.5
-python-dotenv==1.0.1
-django-cors-headers==4.6.0
-django-crispy-forms==2.3
-crispy-tailwind==1.0.3
-reportlab==4.2.5
-weasyprint==63.1
-tinyhtml5==2.0.0 
+Django
+python-dotenv
+django-cors-headers
+django-crispy-forms
+crispy-tailwind
+reportlab
+weasyprint
+tinyhtml5

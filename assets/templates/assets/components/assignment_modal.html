@@ -1,20 +1,10 @@
 <!-- Assignment Details Modal -->
-<div x-show="open" 
-     class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center"
-     x-transition:enter="transition ease-out duration-300"
-     x-transition:enter-start="opacity-0"
-     x-transition:enter-end="opacity-100"
-     x-transition:leave="transition ease-in duration-200"
-     x-transition:leave-start="opacity-100"
-     x-transition:leave-end="opacity-0">
-    
-    <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-4"
-         @click.away="open = false">
-        
+<div id="assignmentModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-4">
         <!-- Modal Header -->
         <div class="flex items-center justify-between p-4 border-b">
-            <h3 class="text-xl font-semibold text-gray-900" x-text="'Assignment Details - ' + assignment?.asset?.name"></h3>
-            <button @click="open = false" class="text-gray-400 hover:text-gray-500">
+            <h3 id="modalTitle" class="text-xl font-semibold text-gray-900"></h3>
+            <button onclick="hideModal('assignmentModal')" class="text-gray-400 hover:text-gray-500">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
@@ -27,41 +17,41 @@
                 <div>
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-500">Asset Tag</label>
-                        <p class="mt-1 text-sm text-gray-900" x-text="assignment?.asset?.tag"></p>
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-500">Asset Name</label>
-                        <p class="mt-1 text-sm text-gray-900" x-text="assignment?.asset?.name"></p>
+                        <p id="modalAssetTag" class="mt-1 text-sm text-gray-900"></p>
                     </div>
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-500">Assigned To</label>
-                        <p class="mt-1 text-sm text-gray-900" x-text="assignment?.assigned_to"></p>
+                        <p id="modalAssignedTo" class="mt-1 text-sm text-gray-900"></p>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-500">Assigned By</label>
+                        <p id="modalAssignedBy" class="mt-1 text-sm text-gray-900"></p>
                     </div>
                 </div>
                 <div>
                     <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-500">Assigned By</label>
-                        <p class="mt-1 text-sm text-gray-900" x-text="assignment?.assigned_by"></p>
-                    </div>
-                    <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-500">Assigned Date</label>
-                        <p class="mt-1 text-sm text-gray-900" x-text="assignment?.assigned_date"></p>
+                        <p id="modalAssignedDate" class="mt-1 text-sm text-gray-900"></p>
                     </div>
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-500">Expected Return Date</label>
-                        <p class="mt-1 text-sm text-gray-900" x-text="assignment?.expected_return_date || 'Not specified'"></p>
+                        <p id="modalExpectedReturn" class="mt-1 text-sm text-gray-900"></p>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-500">Return Date</label>
+                        <p id="modalReturnDate" class="mt-1 text-sm text-gray-900"></p>
                     </div>
                 </div>
             </div>
             <div class="mt-6">
                 <label class="block text-sm font-medium text-gray-500">Notes</label>
-                <p class="mt-1 text-sm text-gray-900" x-text="assignment?.notes || 'No notes'"></p>
+                <p id="modalNotes" class="mt-1 text-sm text-gray-900"></p>
             </div>
         </div>
 
         <!-- Modal Footer -->
         <div class="flex items-center justify-end px-6 py-4 bg-gray-50 border-t">
-            <button @click="open = false" 
+            <button onclick="hideModal('assignmentModal')" 
                     class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-500">
                 Close
             </button>

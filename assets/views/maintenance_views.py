@@ -2,12 +2,12 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.contrib import messages
-from ..models import Maintenance
+from ..models import Maintenance, Asset
 from ..forms import MaintenanceForm
 
 @login_required
 def maintenance_list(request):
-    maintenance_records = Maintenance.objects.all().order_by('-maintenance_date')
+    maintenance_records = Maintenance.objects.select_related('asset').all().order_by('-maintenance_date')
     return render(request, 'assets/maintenance_list.html', {
         'maintenance_records': maintenance_records,
         'page_title': 'Maintenance Records'
@@ -33,7 +33,13 @@ def maintenance_edit(request, pk):
     if request.method == 'POST':
         form = MaintenanceForm(request.POST, instance=maintenance)
         if form.is_valid():
-            form.save()
+            maintenance = form.save()
+            
+            # Update asset status
+            asset = maintenance.asset
+            asset.status = 'maintenance'
+            asset.save()
+            
             messages.success(request, 'Maintenance record updated successfully.')
             return redirect('maintenance_list')
     else:
@@ -49,6 +55,11 @@ def maintenance_delete(request, pk):
     if request.method == 'POST':
         maintenance = get_object_or_404(Maintenance, pk=pk)
         try:
+            # Update asset status back to available
+            asset = maintenance.asset
+            asset.status = 'available'
+            asset.save()
+            
             maintenance.delete()
             messages.success(request, 'Maintenance record deleted successfully.')
         except Exception as e:

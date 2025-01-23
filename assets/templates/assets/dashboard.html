@@ -3,18 +3,21 @@
 
 {% block content %}
 <div class="flex h-screen bg-gray-100">
-    <!-- Sidebar -->
-    <!-- Sidebar -->
     {% include 'assets/components/sidebar.html' %}
 
-    <!-- Main Content -->
     <main class="flex-1 overflow-y-auto">
         <!-- Top Bar -->
         <div class="bg-white shadow-sm">
             <div class="flex items-center justify-between px-8 py-4">
                 <h1 class="text-2xl font-semibold text-gray-800">{{ page_title }}</h1>
-                <div class="flex items-center">
-                    <span class="mr-4 text-gray-600">{{ request.user.email }}</span>
+                <div class="flex items-center space-x-4">
+                    <button onclick="reloadData()" class="flex items-center text-blue-600 hover:text-blue-800">
+                        <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                        </svg>
+                        Reload Data
+                    </button>
+                    <span class="text-gray-600">{{ request.user.email }}</span>
                     <a href="{% url 'logout' %}" class="text-red-600 hover:text-red-800">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
@@ -24,38 +27,173 @@
             </div>
         </div>
 
-        <!-- Dashboard Content -->
         <div class="p-8">
             <!-- Stats Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                {% include 'assets/components/stat_card.html' with title='Total Assets' value=total_assets icon='clipboard-list' %}
-                {% include 'assets/components/stat_card.html' with title='Assigned Assets' value=assigned_assets color='blue' icon='users' %}
-                {% include 'assets/components/stat_card.html' with title='Under Maintenance' value=maintenance_assets color='yellow' icon='cog' %}
-                {% include 'assets/components/stat_card.html' with title='Available Assets' value=available_assets color='green' icon='check-circle' %}
-            </div>
-
-            <!-- Recent Activities -->
-            <div class="bg-white rounded-lg shadow-sm p-6">
-                <h2 class="text-lg font-semibold text-gray-800 mb-4">Recent Activities</h2>
-                <div class="space-y-4">
-                    {% for activity in recent_activities %}
-                    <div class="flex items-center p-4 bg-gray-50 rounded-lg">
-                        <div class="flex-shrink-0 mr-4">
-                            <span class="w-10 h-10 flex items-center justify-center rounded-full bg-blue-100 text-blue-600">
-                                {{ activity.icon|safe }}
+                <!-- Total Assets -->
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <span class="w-12 h-12 flex items-center justify-center rounded-lg bg-blue-100 text-blue-600">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                                </svg>
                             </span>
                         </div>
-                        <div>
-                            <p class="text-gray-800">{{ activity.description }}</p>
-                            <p class="text-sm text-gray-500">{{ activity.timestamp|timesince }} ago</p>
+                        <div class="ml-4">
+                            <h3 class="text-2xl font-semibold text-gray-800">{{ total_assets }}</h3>
+                            <p class="text-sm text-gray-500">Total Assets</p>
                         </div>
                     </div>
-                    {% empty %}
-                    <p class="text-gray-500 text-center py-4">No recent activities</p>
-                    {% endfor %}
+                    <div class="mt-3 text-sm text-green-600 flex items-center">
+                        <span class="font-medium">↑ 33%</span>
+                        <span class="ml-1">from last month</span>
+                    </div>
+                </div>
+
+                <!-- Assigned Assets -->
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <span class="w-12 h-12 flex items-center justify-center rounded-lg bg-green-100 text-green-600">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                </svg>
+                            </span>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-2xl font-semibold text-gray-800">{{ assigned_assets }}</h3>
+                            <p class="text-sm text-gray-500">Assigned Assets</p>
+                        </div>
+                    </div>
+                    <div class="mt-3 text-sm text-red-600 flex items-center">
+                        <span class="font-medium">↓ 2%</span>
+                        <span class="ml-1">from last month</span>
+                    </div>
+                </div>
+
+                <!-- Maintenance Assets -->
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <span class="w-12 h-12 flex items-center justify-center rounded-lg bg-yellow-100 text-yellow-600">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                </svg>
+                            </span>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-2xl font-semibold text-gray-800">{{ maintenance_assets }}</h3>
+                            <p class="text-sm text-gray-500">Under Maintenance</p>
+                        </div>
+                    </div>
+                    <div class="mt-3 text-sm text-green-600 flex items-center">
+                        <span class="font-medium">↑ 12%</span>
+                        <span class="ml-1">from last month</span>
+                    </div>
+                </div>
+
+                <!-- Available Assets -->
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <span class="w-12 h-12 flex items-center justify-center rounded-lg bg-purple-100 text-purple-600">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </span>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-2xl font-semibold text-gray-800">{{ available_assets }}</h3>
+                            <p class="text-sm text-gray-500">Available Assets</p>
+                        </div>
+                    </div>
+                    <div class="mt-3 text-sm text-green-600 flex items-center">
+                        <span class="font-medium">↑ 22%</span>
+                        <span class="ml-1">from last month</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activities and Charts -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Recent Activities -->
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-lg font-semibold text-gray-800">Recent Activities</h2>
+                        <a href="#" class="text-sm text-blue-600 hover:text-blue-800">View All</a>
+                    </div>
+                    <div class="space-y-4">
+                        {% for activity in recent_activities %}
+                        <div class="flex items-center p-4 bg-gray-50 rounded-lg">
+                            <div class="flex-shrink-0 mr-4">
+                                <span class="w-10 h-10 flex items-center justify-center rounded-full bg-blue-100 text-blue-600">
+                                    {{ activity.icon|safe }}
+                                </span>
+                            </div>
+                            <div>
+                                <p class="text-gray-800">{{ activity.description }}</p>
+                                <p class="text-sm text-gray-500">{{ activity.timestamp|timesince }} ago</p>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <p class="text-gray-500 text-center py-4">No recent activities</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Asset Distribution Chart -->
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <h2 class="text-lg font-semibold text-gray-800 mb-4">Asset Distribution</h2>
+                    <canvas id="assetDistributionChart" class="w-full"></canvas>
                 </div>
             </div>
         </div>
     </main>
 </div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Asset Distribution Chart
+    const ctx = document.getElementById('assetDistributionChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Available', 'Assigned', 'Maintenance', 'Retired'],
+            datasets: [{
+                data: [{{ available_assets }}, {{ assigned_assets }}, {{ maintenance_assets }}, 0],
+                backgroundColor: [
+                    'rgba(34, 197, 94, 0.6)',
+                    'rgba(59, 130, 246, 0.6)',
+                    'rgba(234, 179, 8, 0.6)',
+                    'rgba(239, 68, 68, 0.6)'
+                ],
+                borderColor: [
+                    'rgb(34, 197, 94)',
+                    'rgb(59, 130, 246)',
+                    'rgb(234, 179, 8)',
+                    'rgb(239, 68, 68)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+});
+
+function reloadData() {
+    window.location.reload();
+}
+</script>
 {% endblock %}

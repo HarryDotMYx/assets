@@ -8,7 +8,12 @@ from .form_views import (
     assignment_create,
     maintenance_create
 )
-from .assignment_views import assignment_list
+from .assignment_views import (
+    assignment_list,
+    assignment_edit,
+    assignment_return,
+    assignment_delete
+)
 from .maintenance_views import (
     maintenance_list,
     maintenance_edit,
@@ -25,6 +30,9 @@ __all__ = [
     'asset_delete',
     'assignment_list',
     'assignment_create',
+    'assignment_edit',
+    'assignment_return',
+    'assignment_delete',
     'maintenance_list',
     'maintenance_create',
     'maintenance_edit',

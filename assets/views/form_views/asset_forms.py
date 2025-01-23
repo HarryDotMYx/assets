@@ -10,12 +10,13 @@ def asset_create(request):
         form = AssetForm(request.POST)
         if form.is_valid():
             asset = form.save(commit=False)
-            asset.person_in_charge = request.user.email  # Set the logged-in user's email
+            asset.person_in_charge = request.user.email
             asset.save()
             messages.success(request, 'Asset created successfully.')
             return redirect('asset_list')
     else:
-        form = AssetForm()
+        initial_data = {'person_in_charge': request.user.email}
+        form = AssetForm(initial=initial_data)
     
     return render(request, 'assets/forms/asset_form.html', {
         'form': form,
@@ -28,9 +29,7 @@ def asset_edit(request, pk):
     if request.method == 'POST':
         form = AssetForm(request.POST, instance=asset)
         if form.is_valid():
-            asset = form.save(commit=False)
-            asset.person_in_charge = request.user.email  # Update with current user's email
-            asset.save()
+            form.save()  # No need to set person_in_charge again when editing
             messages.success(request, 'Asset updated successfully.')
             return redirect('asset_list')
     else:

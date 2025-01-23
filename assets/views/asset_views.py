@@ -7,13 +7,11 @@ from ..models import Asset
 
 @login_required
 def asset_list(request):
-    assets = Asset.objects.all().order_by('-created_at')
-    assets_data = [asset.to_dict() for asset in assets]
+    assets = Asset.objects.select_related('category').all().order_by('-created_at')
     return render(request, 'assets/asset_list.html', {
         'assets': assets,
-        'assets_json': assets_data,
         'page_title': 'Assets',
-        'now': timezone.now().date()  # Add current date to context
+        'now': timezone.now().date()
     })
 
 @login_required
